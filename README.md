@@ -1,6 +1,6 @@
 <div align="center">
   <img src="https://img.icons8.com/color/96/000000/google-meet.png" alt="Google Meet Logo">
-  <h1>🎙️ Google Meet Auto-Summarizer</h1>
+  <h1> Google Meet Auto-Summarizer</h1>
   <p>
     An intelligent Chrome Extension &amp; Node.js Backend that captures live Google Meet captions,<br>
     summarizes them using Hugging Face AI, generates a professional PDF report, and emails it to participants.
@@ -44,7 +44,7 @@ flowchart TD
         G["emailSender.js\n────────────\nGmail App Password\nOR Brevo SMTP\nAttaches PDF"]
     end
 
-    subgraph EXTERNAL["☁️ External Services"]
+    subgraph EXTERNAL[" External Services"]
         H[" Hugging Face\nfacebook/bart-large-cnn\nInference API"]
         I[" Gmail SMTP\n/ Brevo SMTP"]
     end
@@ -97,7 +97,7 @@ Google Meet (CC Captions)
 
 ---
 
-## 📸 Output Proof
+##  Output Proof
 
 ### Chrome Extension Popup
 > Live word count, transcript preview, email entry, and one-click summarization.
@@ -175,7 +175,7 @@ npm start
 ##  How to Use
 
 1. Start a **Google Meet** call at `meet.google.com`
-2. 🚨 **Enable live captions** — click the **CC** button at the bottom of Meet
+2.  **Enable live captions** — click the **CC** button at the bottom of Meet
 3. Click the extension icon in your toolbar — watch word count rise in real time
 4. When the meeting ends, enter recipient emails (comma-separated)
 5. Click **Generate Summary & Email PDF**
@@ -235,9 +235,5 @@ Contributions, issues, and feature requests are welcome!
 3. Commit your Changes (`git commit -m 'Add AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
----
-
-<div align="center">
-  <i>Built with ❤️ using Node.js, Chrome Extensions, and Hugging Face AI.</i>
+.</i>
 </div>
