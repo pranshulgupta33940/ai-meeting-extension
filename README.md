@@ -27,9 +27,46 @@
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
 
-![Architecture Diagram](assets/architecture.png)
+```mermaid
+flowchart TD
+    subgraph EXT["🧩 Chrome Extension (MV3)"]
+        A["content.js\n────────────\nDOM MutationObserver\nScrapes CC captions\nDeduplicates text\nBuffers transcript"]
+        B["background.js\n────────────\nService Worker\nMessage relay"]
+        C["popup.html / popup.js\n────────────\nWord count display\nEmail input field\nGenerate button"]
+    end
+
+    subgraph BACKEND["⚙️ Node.js Backend (Express)"]
+        D["POST /summarize\n────────────\nValidates payload\nOrchestrates pipeline"]
+        E["huggingface.js\n────────────\nChunks transcript\n3500 chars/chunk\nRetry on 503"]
+        F["pdfGenerator.js\n────────────\nBranded header\nStats cards\nColor-coded sections\nNumbered items"]
+        G["emailSender.js\n────────────\nGmail App Password\nOR Brevo SMTP\nAttaches PDF"]
+    end
+
+    subgraph EXTERNAL["☁️ External Services"]
+        H["🤗 Hugging Face\nfacebook/bart-large-cnn\nInference API"]
+        I["📧 Gmail SMTP\n/ Brevo SMTP"]
+    end
+
+    USER(["👤 User\n(in Google Meet)"]) -->|Speaks, CC enabled| A
+    A -->|Full transcript string| B
+    B -->|Passes to popup| C
+    C -->|POST transcript + emails| D
+    D --> E
+    E -->|text chunks| H
+    H -->|summary_text per chunk| E
+    E -->|structured summary| D
+    D --> F
+    F -->|PDF Buffer| D
+    D --> G
+    G -->|PDF attachment| I
+    I -->|Email delivered| INBOX(["📬 Recipient Inbox"])
+
+    style EXT fill:#1E1B4B,color:#fff,stroke:#4F46E5
+    style BACKEND fill:#1E3A2F,color:#fff,stroke:#22C55E
+    style EXTERNAL fill:#3B1F00,color:#fff,stroke:#F59E0B
+```
 
 ### Flow
 
