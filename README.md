@@ -14,24 +14,24 @@
 
 ---
 
-## ✨ Features
+##  Features
 
 | Feature | Description |
 |---|---|
-| 🎤 **Live Caption Capture** | Silently reads captions directly from the Google Meet DOM — no audio recording |
-| 🧹 **Smart Deduplication** | Filters out repeated words and partial phrases in real-time |
-| 🤖 **AI Summarization** | Uses Hugging Face `facebook/bart-large-cnn` to extract Key Points, Action Items & Decisions |
-| 📦 **Auto-Chunking** | Handles long meetings by splitting transcripts so token limits are never exceeded |
-| 📄 **Professional PDF** | Generates a branded, color-coded PDF report with stats, sections & numbered items |
-| 📧 **Email Automation** | Sends the PDF directly to all participant emails (Gmail or Brevo SMTP) |
+|  **Live Caption Capture** | Silently reads captions directly from the Google Meet DOM — no audio recording |
+|  **Smart Deduplication** | Filters out repeated words and partial phrases in real-time |
+|  **AI Summarization** | Uses Hugging Face `facebook/bart-large-cnn` to extract Key Points, Action Items & Decisions |
+|  **Auto-Chunking** | Handles long meetings by splitting transcripts so token limits are never exceeded |
+|  **Professional PDF** | Generates a branded, color-coded PDF report with stats, sections & numbered items |
+|  **Email Automation** | Sends the PDF directly to all participant emails (Gmail or Brevo SMTP) |
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```mermaid
 flowchart TD
-    subgraph EXT["🧩 Chrome Extension (MV3)"]
+    subgraph EXT[" Chrome Extension (MV3)"]
         A["content.js\n────────────\nDOM MutationObserver\nScrapes CC captions\nDeduplicates text\nBuffers transcript"]
         B["background.js\n────────────\nService Worker\nMessage relay"]
         C["popup.html / popup.js\n────────────\nWord count display\nEmail input field\nGenerate button"]
@@ -45,11 +45,11 @@ flowchart TD
     end
 
     subgraph EXTERNAL["☁️ External Services"]
-        H["🤗 Hugging Face\nfacebook/bart-large-cnn\nInference API"]
-        I["📧 Gmail SMTP\n/ Brevo SMTP"]
+        H[" Hugging Face\nfacebook/bart-large-cnn\nInference API"]
+        I[" Gmail SMTP\n/ Brevo SMTP"]
     end
 
-    USER(["👤 User\n(in Google Meet)"]) -->|Speaks, CC enabled| A
+    USER([" User\n(in Google Meet)"]) -->|Speaks, CC enabled| A
     A -->|Full transcript string| B
     B -->|Passes to popup| C
     C -->|POST transcript + emails| D
@@ -61,7 +61,7 @@ flowchart TD
     F -->|PDF Buffer| D
     D --> G
     G -->|PDF attachment| I
-    I -->|Email delivered| INBOX(["📬 Recipient Inbox"])
+    I -->|Email delivered| INBOX([" Recipient Inbox"])
 
     style EXT fill:#1E1B4B,color:#fff,stroke:#4F46E5
     style BACKEND fill:#1E3A2F,color:#fff,stroke:#22C55E
@@ -92,7 +92,7 @@ Google Meet (CC Captions)
 └─────────────────────────────────────────┘
              │
              ▼
-     ✅ PDF email in inbox
+      PDF email in inbox
 ```
 
 ---
@@ -116,7 +116,7 @@ The PDF is professionally designed with:
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -127,7 +127,7 @@ The PDF is professionally designed with:
 
 ---
 
-### 1️⃣ Backend Setup
+### 1️ Backend Setup
 
 ```bash
 cd backend
@@ -163,7 +163,7 @@ npm start
 
 ---
 
-### 2️⃣ Chrome Extension Setup
+### 2️ Chrome Extension Setup
 
 1. Open Chrome → navigate to `chrome://extensions`
 2. Enable **Developer mode** (top-right toggle)
@@ -172,7 +172,7 @@ npm start
 
 ---
 
-## 💻 How to Use
+##  How to Use
 
 1. Start a **Google Meet** call at `meet.google.com`
 2. 🚨 **Enable live captions** — click the **CC** button at the bottom of Meet
@@ -183,7 +183,7 @@ npm start
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -196,7 +196,7 @@ npm start
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 extension/
@@ -226,7 +226,7 @@ extension/
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions, issues, and feature requests are welcome!
 
