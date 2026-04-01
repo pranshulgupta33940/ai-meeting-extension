@@ -144,17 +144,17 @@ function setLoading(isLoading) {
   btnSummarize.disabled = isLoading;
   btnSummarize.innerHTML = isLoading
     ? `<span class="spinner"></span> Processing...`
-    : `✨ Generate Summary &amp; Email PDF`;
+    : `Generate Summary &amp; Email PDF`;
 }
 
 function showError(msg) {
-  messageEl.textContent = "❌ " + msg;
+  messageEl.textContent = msg;
   messageEl.className = "message message--error";
   messageEl.hidden = false;
 }
 
 function showSuccess(msg) {
-  messageEl.textContent = "✅ " + msg;
+  messageEl.textContent = msg;
   messageEl.className = "message message--success";
   messageEl.hidden = false;
 }

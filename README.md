@@ -2,7 +2,8 @@
   <img src="https://img.icons8.com/color/96/000000/google-meet.png" alt="Google Meet Logo">
   <h1>🎙️ Google Meet Auto-Summarizer</h1>
   <p>
-    An intelligent Chrome Extension & Node.js Backend that captures live Google Meet captions, summarizes them using Hugging Face AI, generates a PDF report, and emails it to participants.
+    An intelligent Chrome Extension &amp; Node.js Backend that captures live Google Meet captions,<br>
+    summarizes them using Hugging Face AI, generates a professional PDF report, and emails it to participants.
   </p>
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -15,94 +16,191 @@
 
 ## ✨ Features
 
-- **Live Caption Capture:** Silently captures text directly from the Google Meet DOM (no invasive audio recording required).
-- **Smart Deduplication:** Filters out repeated words and stutters in real-time.
-- **AI Summarization:** Uses Hugging Face's `BART-large-cnn` model to extract Key Points, Action Items, and Decisions.
-- **Auto-Chunking:** Safely handles long meetings by chunking transcripts so token limits are never exceeded.
-- **PDF Generation:** Instantly compiles the AI summary into a clean, formatted PDF document.
-- **Email Automation:** Automatically sends the generated PDF directly to the entered email addresses.
+| Feature | Description |
+|---|---|
+| 🎤 **Live Caption Capture** | Silently reads captions directly from the Google Meet DOM — no audio recording |
+| 🧹 **Smart Deduplication** | Filters out repeated words and partial phrases in real-time |
+| 🤖 **AI Summarization** | Uses Hugging Face `facebook/bart-large-cnn` to extract Key Points, Action Items & Decisions |
+| 📦 **Auto-Chunking** | Handles long meetings by splitting transcripts so token limits are never exceeded |
+| 📄 **Professional PDF** | Generates a branded, color-coded PDF report with stats, sections & numbered items |
+| 📧 **Email Automation** | Sends the PDF directly to all participant emails (Gmail or Brevo SMTP) |
+
+---
 
 ## 🏗️ Architecture
 
-1. **Chrome Extension (`/chrome-extension`)**: Injects a script into `meet.google.com` to observe DOM mutations and scrape CC text.
-2. **Node.js Backend (`/backend`)**: Exposes a REST API (`POST /summarize`) that receives the transcript, talks to Hugging Face, generates the PDF via `pdfkit`, and emails it using `nodemailer`.
+![Architecture Diagram](assets/architecture.png)
+
+### Flow
+
+```
+Google Meet (CC Captions)
+        │
+        ▼
+┌─────────────────────────────┐
+│    Chrome Extension         │  ← Reads DOM mutations from .caption element
+│  content.js + background.js │  ← Buffers full transcript
+│  popup.html + popup.js      │  ← UI: word count, email input, send button
+└────────────┬────────────────┘
+             │  POST /summarize  {transcript, emails[]}
+             ▼
+┌─────────────────────────────────────────┐
+│         Node.js Backend (Express)        │
+│                                         │
+│  1. Chunk transcript (3500 chars/chunk) │
+│  2. Call HF BART-large-cnn per chunk   │──► Hugging Face Inference API
+│  3. Combine + parse Key/Action/Decision │
+│  4. Generate PDF (pdfkit)               │
+│  5. Send Email (nodemailer)             │──► Gmail / Brevo SMTP
+└─────────────────────────────────────────┘
+             │
+             ▼
+     ✅ PDF email in inbox
+```
+
+---
+
+## 📸 Output Proof
+
+### Chrome Extension Popup
+> Live word count, transcript preview, email entry, and one-click summarization.
+
+<div align="center">
+  <img src="assets/pdf_output.png" alt="PDF Output Preview" width="480">
+</div>
+
+### Generated PDF Report
+The PDF is professionally designed with:
+- **Branded header** — dark navy with report title and timestamp
+- **Stats row** — count cards for Key Points / Action Items / Decisions
+- **Color-coded sections** — blue (Key Points), green (Action Items), amber (Decisions)
+- **Numbered item cards** with accent borders
+- **Professional footer** with confidentiality note
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-Before you begin, ensure you have the following ready:
-- **Node.js** (v16.x or higher) installed on your machine.
-- A free **Hugging Face Inference API Token** ([Get it here](https://huggingface.co/settings/tokens)).
-- A **Google App Password** for sending emails via Nodemailer ([Generate one here](https://myaccount.google.com/apppasswords)).
+- **Node.js** v16+ — [nodejs.org](https://nodejs.org/)
+- **Hugging Face token** (Fine-grained, with `Make calls to Inference Providers` permission) — [Get it here](https://huggingface.co/settings/tokens)
+- **Gmail App Password** (requires 2FA enabled) — [Generate one here](https://myaccount.google.com/apppasswords)  
+  _Or use a free [Brevo](https://brevo.com) SMTP account instead_
 
-### 1️⃣ Setting up the Backend
+---
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create your environment configuration:
-   ```bash
-   cp .env.example .env
-   ```
-4. Open the `.env` file and insert your actual credentials:
-   ```env
-   PORT=3000
-   HF_API_KEY=your_huggingface_token
-   EMAIL_USER=your_email@gmail.com
-   EMAIL_PASS=your_16_character_app_password
-   ```
-5. Start the server:
-   ```bash
-   npm start
-   ```
+### 1️⃣ Backend Setup
 
-### 2️⃣ Loading the Chrome Extension
+```bash
+cd backend
+npm install
+```
 
-1. Open Google Chrome and navigate to `chrome://extensions`.
-2. Enable **Developer mode** using the toggle in the top-right corner.
-3. Click **Load unpacked** in the top-left corner.
-4. Select the `chrome-extension` folder from this repository.
-5. The extension is now installed! You can pin it to your toolbar for easy access.
+Create your `.env` file:
+
+```env
+PORT=3000
+
+# Hugging Face — Fine-grained token with "Make calls to Inference Providers" checked
+HF_API_KEY=hf_your_token_here
+
+# Email — Gmail with App Password
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_16_char_app_password
+EMAIL_SERVICE=gmail
+
+# OR — Brevo SMTP (no 2FA needed)
+# EMAIL_USER=your_brevo_login
+# EMAIL_PASS=your_brevo_master_password
+# SMTP_HOST=smtp-relay.brevo.com
+# SMTP_PORT=587
+```
+
+Start the server:
+
+```bash
+npm start
+# → [Server] Listening on http://localhost:3000
+```
+
+---
+
+### 2️⃣ Chrome Extension Setup
+
+1. Open Chrome → navigate to `chrome://extensions`
+2. Enable **Developer mode** (top-right toggle)
+3. Click **Load unpacked** → select the `chrome-extension/` folder
+4. Pin the extension to your toolbar
 
 ---
 
 ## 💻 How to Use
 
-1. Launch a **Google Meet** call (`meet.google.com/new`).
-2. 🚨 **CRUCIAL:** Click the **CC (Turn on captions)** button at the bottom of the Meet screen. The extension only captures words that appear visually on the screen.
-3. Speak normally. You can click the extension icon in your Chrome toolbar to watch the word count increase in real-time.
-4. When the meeting is finished, click the extension icon.
-5. Enter the recipient emails (comma-separated).
-6. Click **Generate Summary & Email PDF**.
-7. Check your terminal to see the AI processing in action. In a few seconds, an email will arrive in your inbox!
+1. Start a **Google Meet** call at `meet.google.com`
+2. 🚨 **Enable live captions** — click the **CC** button at the bottom of Meet
+3. Click the extension icon in your toolbar — watch word count rise in real time
+4. When the meeting ends, enter recipient emails (comma-separated)
+5. Click **Generate Summary & Email PDF**
+6. In seconds, a professional PDF summary arrives in the inbox ✅
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** HTML, CSS, Vanilla JavaScript (Manifest V3)
-- **Backend:** Node.js, Express.js
-- **AI Integrations:** Hugging Face Inference API (`facebook/bart-large-cnn`)
-- **Utilities:** `axios` (API fetching), `pdfkit` (PDF creation), `nodemailer` (Email SMTP)
+| Layer | Technology |
+|---|---|
+| Chrome Extension | HTML, CSS, Vanilla JS (Manifest V3) |
+| Backend | Node.js, Express.js |
+| AI Model | Hugging Face `facebook/bart-large-cnn` via Inference API |
+| PDF Generation | `pdfkit` |
+| Email | `nodemailer` (Gmail App Password or Brevo SMTP) |
+| HTTP Client | `axios` |
+
+---
+
+## 📁 Project Structure
+
+```
+extension/
+├── chrome-extension/
+│   ├── manifest.json       # MV3 config
+│   ├── content.js          # Caption scraper (DOM observer)
+│   ├── background.js       # Service worker
+│   ├── popup.html          # Extension popup UI
+│   ├── popup.js            # Popup logic + API call
+│   └── styles.css          # Popup styling
+│
+├── backend/
+│   ├── server.js           # Express app entry point
+│   ├── routes/
+│   │   └── summarize.js    # POST /summarize route
+│   └── services/
+│       ├── huggingface.js  # AI summarization + chunking
+│       ├── pdfGenerator.js # Professional PDF builder
+│       └── emailSender.js  # Nodemailer (Gmail / SMTP)
+│
+├── assets/
+│   ├── architecture.png    # Architecture diagram
+│   └── pdf_output.png      # PDF output sample
+│
+└── .env                    # (gitignored) your secrets
+```
+
+---
 
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!
-Feel free to check [issues page](https://github.com/yourusername/meet-summarizer/issues).
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+3. Commit your Changes (`git commit -m 'Add AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
 ---
+
 <div align="center">
-  <i>Built with ❤️ using Node.js and Chrome Extensions.</i>
+  <i>Built with ❤️ using Node.js, Chrome Extensions, and Hugging Face AI.</i>
 </div>
