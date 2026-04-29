@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet Summarizer Options</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }
+    .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    h1 { font-size: 20px; margin-top: 0; }
+    p { font-size: 13px; color: #64748b; line-height: 1.5; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 5px; }
+    input { width: 100%; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; }
+    button { background: #1a73e8; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    button:hover { background: #1557b0; }
+    .status { margin-top: 15px; font-size: 13px; color: #166534; display: none; }
+    .instructions { background: #f1f5f9; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 12px; }
+    a { color: #1a73e8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Settings</h1>
+    <p>Configure your API keys to enable AI summarization and email delivery.</p>
+
+    <div class="form-group">
+      <label for="geminiKey">Gemini API Key</label>
+      <input type="password" id="geminiKey" placeholder="AIzaSy...">
+    </div>
+
+    <div class="form-group">
+      <label for="emailServiceId">EmailJS Service ID</label>
+      <input type="text" id="emailServiceId" placeholder="service_xyz">
+    </div>
+
+    <div class="form-group">
+      <label for="emailTemplateId">EmailJS Template ID</label>
+      <input type="text" id="emailTemplateId" placeholder="template_abc">
+    </div>
+
+    <div class="form-group">
+      <label for="emailPublicKey">EmailJS Public Key</label>
+      <input type="text" id="emailPublicKey" placeholder="abc123def456">
+    </div>
+
+    <button id="saveBtn">Save Settings</button>
+    <div id="status" class="status">Settings saved successfully!</div>
+
+    <div class="instructions">
+      <strong>Setup Instructions:</strong><br><br>
+      For Gemini API: <br>
+      <a href="https://aistudio.google.com/app/apikey" target="_blank">Get Gemini API key (free)</a>. Sign up at Google AI Studio and click "Create API key".<br><br>
+      For EmailJS: <br>
+      <a href="https://www.emailjs.com/" target="_blank">Get EmailJS account (free)</a>. Sign up free, create a service (Gmail), create a template with variable <code>{{meeting_summary}}</code>, copy the IDs here.
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
